@@ -1,5 +1,6 @@
 package co.com.ias.bootcamp.javatesting2.repositories;
 
+import co.com.ias.bootcamp.javatesting2.domain.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -22,16 +23,14 @@ public class BookRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Map<String, String>> findAllBooks() {
-        return jdbcTemplate.query("SELECT * FROM books", new RowMapper<Map<String, String>>() {
+    public List<Book> findAllBooks() {
+        return jdbcTemplate.query("SELECT * FROM books", new RowMapper<Book>() {
             @Override
-            public Map<String, String> mapRow(ResultSet resultSet, int i) throws SQLException {
+            public Book mapRow(ResultSet resultSet, int i) throws SQLException {
                 String isbn = resultSet.getString("isbn");
                 String name = resultSet.getString("name");
-                Map<String, String> map = new HashMap<>();
-                map.put("isbn", isbn);
-                map.put("name", name);
-                return map;
+
+                return new Book.Builder(isbn, name).build();
             }
         });
     }
